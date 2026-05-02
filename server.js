@@ -27,7 +27,7 @@ const MODEL_MAPPING = {
   'gpt-4-turbo': 'moonshotai/kimi-k2-instruct-0905',
   'gpt-4o': 'deepseek/deepseek-v4-pro',
   'claude-3-opus': 'openai/gpt-oss-120b',
-  'claude-3-sonnet': 'openai/gpt-oss-20b',
+  'claude-3-sonnet': 'deepseek/deepseek-v4-pro',
   'gemini-pro': 'z-ai/glm-5.1' 
 };
 

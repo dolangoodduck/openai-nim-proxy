@@ -20,15 +20,16 @@ const SHOW_REASONING = false; // Set to true to show reasoning with <think> tags
 // 🔥 THINKING MODE TOGGLE - Enables thinking for specific models that support it
 const ENABLE_THINKING_MODE = false; // Set to true to enable chat_template_kwargs thinking parameter
 
-// Model mapping - change the nimModel values below to your preferred models
+// Model mapping - NIM requires the full "org/model" slug exactly as listed on build.nvidia.com
+// ⚠️  Wrong namespace = 404. Always verify at: https://build.nvidia.com/z-ai (or the relevant org page)
 const MODEL_MAPPING = {
-  'gpt-3.5-turbo': 'nvidia/llama-3.1-nemotron-ultra-253b-v1',
-  'gpt-4': 'deepseek-ai/deepseek-v3.2',
-  'gpt-4-turbo': 'moonshotai/kimi-k2-instruct-0905',
-  'gpt-4o': 'deepseek-ai/deepseek-v4-flash',
-  'claude-3-opus': 'openai/gpt-oss-120b',
-  'claude-3-sonnet': 'deepseek-ai/deepseek-v4-pro',
-  'gemini-pro': 'z-ai/glm-5.2' 
+  'gpt-3.5-turbo':  'nvidia/llama-3.1-nemotron-ultra-253b-v1',
+  'gpt-4':          'deepseek-ai/deepseek-v3.2',
+  'gpt-4-turbo':    'moonshotai/kimi-k2-instruct-0905',
+  'gpt-4o':         'deepseek-ai/deepseek-v4-flash',
+  'claude-3-opus':  'openai/gpt-oss-120b',
+  'claude-3-sonnet':'deepseek-ai/deepseek-v4-pro',
+  'gemini-pro':     'z-ai/glm-5.2'
 };
 
 // Health check endpoint
@@ -82,9 +83,9 @@ app.post('/v1/chat/completions', async (req, res) => {
       if (!nimModel) {
         const modelLower = model.toLowerCase();
         if (modelLower.includes('gpt-4') || modelLower.includes('claude-opus') || modelLower.includes('405b')) {
-          nimModel = 'deepseek/deepseek-v4-pro';
+          nimModel = 'deepseek-ai/deepseek-v4-pro';
         } else if (modelLower.includes('claude') || modelLower.includes('gemini') || modelLower.includes('70b')) {
-          nimModel = 'z-ai/glm-5.1';
+          nimModel = 'z-ai/glm-5.2';
         } else {
           nimModel = 'meta/llama-3.1-8b-instruct';
         }
@@ -96,8 +97,7 @@ app.post('/v1/chat/completions', async (req, res) => {
       model: nimModel,
       messages: messages,
       temperature: temperature || 0.6,
-      max_tokens: max_tokens || 9024,
-      extra_body: ENABLE_THINKING_MODE ? { chat_template_kwargs: { thinking: true } } : undefined,
+      max_tokens: max_tokens || 8192,
       stream: stream || false
     };
     
